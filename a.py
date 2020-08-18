@@ -1,9 +1,14 @@
 import torch
+from numpy import genfromtxt
 import matplotlib.pyplot as plt
 
 # Observed/training input and output
-x_train = torch.tensor([1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0]).reshape(-1, 1)  # x_train = [[1], [1.5], [2], [3], [4], [5], [6]]
-y_train = torch.tensor([5.0, 3.5, 3.0, 4.0, 3.0, 1.5, 2.0]).reshape(-1, 1)  # y_train = [[5], [3.5], [3], [4], [3], [1.5], [2]]
+
+all_x = torch.tensor(genfromtxt('length_weight.csv', delimiter=',', usecols=[0])).reshape(-1, 1).double()
+all_y = torch.tensor(genfromtxt('length_weight.csv', delimiter=',', usecols=[1])).reshape(-1, 1).double()
+
+x_train = all_x
+y_train = all_y
 
 
 class LinearRegressionModel:
@@ -14,7 +19,7 @@ class LinearRegressionModel:
 
     # Predictor
     def f(self, x):
-        return x @ self.W + self.b  # @ corresponds to matrix multiplication
+        return x @ self.W.double() + self.b  # @ corresponds to matrix multiplication
 
     # Uses Mean Squared Error
     def loss(self, x, y):
@@ -24,7 +29,7 @@ class LinearRegressionModel:
 model = LinearRegressionModel()
 
 # Optimize: adjust W and b to minimize loss using stochastic gradient descent
-optimizer = torch.optim.SGD([model.b, model.W], 0.005)
+optimizer = torch.optim.SGD([model.b, model.W], 0.0001)
 for epoch in range(10000):
     model.loss(x_train, y_train).backward()  # Compute loss gradients
     optimizer.step()  # Perform optimization by adjusting W and b,
@@ -40,4 +45,4 @@ plt.ylabel('y')
 x = torch.tensor([[torch.min(x_train)], [torch.max(x_train)]])  # x = [[1], [6]]]
 plt.plot(x, model.f(x).detach(), label='$y = f(x) = xW+b$')
 plt.legend()
-plt.savefig(fname='result')
+plt.savefig(fname='a')
