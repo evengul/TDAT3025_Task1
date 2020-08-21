@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 df = pd.read_csv('day_length_weight.csv')
 
 data = torch.tensor(df.values, dtype=torch.float)
-all_x = data[:, 0:2].t()
-all_y = data[:, 2].t()
+all_x = data[:, 1:3].t()
+all_y = data[:, 0].t()
 
 # can be changed to make x_test and y_test
 x_train = all_x
@@ -35,7 +35,7 @@ class LinearRegressionModel:
 model = LinearRegressionModel()
 
 # Optimize: adjust W and b to minimize loss using stochastic gradient descent
-optimizer = torch.optim.SGD([model.W, model.b], 0.0000001)
+optimizer = torch.optim.SGD([model.W, model.b], 0.0001)
 for epoch in range(75000):
     model.loss(x_train, y_train).backward()  # Compute loss gradients
     optimizer.step()  # Perform optimization by adjusting W and b,
@@ -46,7 +46,7 @@ print("W = %s, b = %s, loss = %s" % (model.W, model.b, model.loss(x_train, y_tra
 
 fig = plt.figure().gca(projection='3d')
 
-fig.scatter(df['day'], df['length'], df['weight'], c='red')
+fig.scatter(df['length'], df['weight'], df['day'], c='red')
 
 fig.scatter(x_train[0, :], x_train[1, :], zs=model.f(x_train).detach(), c='blue')
 

@@ -1,9 +1,6 @@
 import torch
 import pandas as pd
-from numpy import genfromtxt
 import matplotlib.pyplot as plt
-
-# Observed/training input and output
 
 data = pd.read_csv('length_weight.csv')
 
@@ -17,8 +14,8 @@ y_train = torch.tensor(all_y).reshape(-1, 1)
 class LinearRegressionModel:
     def __init__(self):
         # Model variables
-        self.W = torch.tensor([[1.0]], requires_grad=True)  # requires_grad enables calculation of gradients
-        self.b = torch.tensor([[1.0]], requires_grad=True)
+        self.W = torch.randn((1, 1), requires_grad=True)  # requires_grad enables calculation of gradients
+        self.b = torch.randn((1, 1), requires_grad=True)
 
     # Predictor
     def f(self, x):
